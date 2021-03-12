@@ -1,3 +1,5 @@
+This is my fork of Firefox's arduino 
+
 # AVR Arduino Zig
 
 This project can build code that can be run on an Arduino Uno, using only Zig as its **only** dependency. 

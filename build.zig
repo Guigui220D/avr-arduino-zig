@@ -16,11 +16,11 @@ pub fn build(b: *Builder) !void {
     exe.setLinkerScriptPath("src/linker.ld");
     exe.install();
 
-    const tty = b.option(
+    const port = b.option(
         []const u8,
-        "tty",
-        "Specify the port to which the Arduino is connected (defaults to /dev/ttyACM0)",
-    ) orelse "/dev/ttyACM0";
+        "port",
+        "Specify the port to which the Arduino is connected (defaults to com8)",
+    ) orelse "com8";
 
     const bin_path = b.getInstallPath(exe.install_step.?.dest_dir, exe.out_filename);
 
@@ -39,7 +39,7 @@ pub fn build(b: *Builder) !void {
         "-patmega328p",
         "-D",
         "-P",
-        tty,
+        port,
         flash_command,
     });
     upload.dependOn(&avrdude.step);
@@ -53,14 +53,6 @@ pub fn build(b: *Builder) !void {
     });
     objdump.dependOn(&avr_objdump.step);
     avr_objdump.step.dependOn(&exe.install_step.?.step);
-
-    const monitor = b.step("monitor", "Opens a monitor to the serial output");
-    const screen = b.addSystemCommand(&.{
-        "screen",
-        tty,
-        "115200",
-    });
-    monitor.dependOn(&screen.step);
 
     b.default_step.dependOn(&exe.step);
 }

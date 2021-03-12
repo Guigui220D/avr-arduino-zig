@@ -1,0 +1,2 @@
+497 1407374884423235 1615399135659839800 c4403b2dfe1edb00a13803d0e58ab415 C:\Users\Guillaume\Programming\zig\repos-uno\avr-arduino-zig\src\linker.ld
+20768 844424931009021 1615574350800903900 dbe4a1aa95d944dd014b47e1b40d9cf7 C:\Users\Guillaume\Programming\zig\repos-uno\avr-arduino-zig\zig-cache\o\b6a3701fd2bbfafe6c10151f865a0328\avr-arduino-zig.o
