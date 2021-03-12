@@ -1,4 +1,7 @@
-This is my fork of Firefox's arduino 
+This is my fork of Firefox's arduino
+I do some tests on there, don't expect quality code!
+
+Original readme:
 
 # AVR Arduino Zig
 

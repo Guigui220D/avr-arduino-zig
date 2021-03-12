@@ -75,13 +75,13 @@ pub fn begin() void {
     CurrentDisp.mode |= Flags.entry_left;
     command(Control.entry_mode_set | CurrentDisp.mode);
 
-    inline for ("Salut Maman!") |c| {
+    inline for ("Hey guys!") |c| {
         write(c);
     }
 
     command(Control.set_DDRAM_address | 0x40);
 
-    inline for (" - Par Guillaume") |c| {
+    inline for (" - by Guigui220D") |c| {
         write(c);
     }
 }
