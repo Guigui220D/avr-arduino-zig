@@ -99,7 +99,7 @@ pub fn writeLines(line1: []const u8, line2: []const u8) void {
         write(c);
 }
 
-pub fn writePanic(msg: []const u8, error_return_trace: ?*@import("builtin").StackTrace) void {
+pub fn writePanic(msg: []const u8) void {
     begin();
 
     for ("Panic! Msg:") |c|

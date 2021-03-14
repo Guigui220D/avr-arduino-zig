@@ -7,7 +7,7 @@ const liquid_crystal = @import("liquid_crystal.zig");
 pub fn main() void {
     liquid_crystal.begin();
 
-    liquid_crystal.writeLines("hellooo", "test");
+    liquid_crystal.writeLines("Hello Github :)", "This is Zig!");
 
     delayMilliseconds(5000);
 

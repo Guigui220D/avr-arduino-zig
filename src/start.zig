@@ -64,6 +64,6 @@ fn clear_bss() void {
 }
 
 pub fn panic(msg: []const u8, error_return_trace: ?*@import("builtin").StackTrace) noreturn {
-    @import("liquid_crystal.zig").writePanic(msg, error_return_trace);
+    @import("liquid_crystal.zig").writePanic(msg);
     while (true) {}
 }
