@@ -1,3 +1,4 @@
+const std = @import("std");
 const uart = @import("uart.zig");
 const gpio = @import("gpio.zig");
 
@@ -5,13 +6,20 @@ const led_keypad = @import("led_keypad.zig");
 const liquid_crystal = @import("liquid_crystal.zig");
 
 pub fn main() void {
-    liquid_crystal.begin();
+    //liquid_crystal.begin();
 
-    liquid_crystal.writeLines("Hello Github :)", "This is Zig!");
+    //liquid_crystal.writeLines("Hello Github :)", "This is Zig!");
+    gpio.pinMode(2, .input);
+    gpio.pinMode(13, .output);
 
-    delayMilliseconds(5000);
+    //std.debug.assert(gpio.digitalRead(2));
 
-    @panic("test");
+    while (true) {
+        if (gpio.digitalRead(2)) {
+            gpio.digitalWrite(13, .low);
+        } else
+            gpio.digitalWrite(13, .high);
+    }
 }
 
 fn delayMilliseconds(comptime ms: comptime_int) void {

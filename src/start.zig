@@ -65,5 +65,25 @@ fn clear_bss() void {
 
 pub fn panic(msg: []const u8, error_return_trace: ?*@import("builtin").StackTrace) noreturn {
     @import("liquid_crystal.zig").writePanic(msg);
-    while (true) {}
+    const gpio = @import("gpio.zig");
+
+    gpio.pinMode(13, .output);
+
+    while (true) {
+        delayMilliseconds(50);
+        gpio.digitalWrite(13, .high);
+        delayMilliseconds(100);
+        gpio.digitalWrite(13, .low);
+    }
+}
+
+fn delayMilliseconds(comptime ms: comptime_int) void {
+    delayCycles(ms * 1600);
+}
+
+fn delayCycles(comptime cycles: comptime_int) void {
+    var count: u32 = 0;
+    while (count < cycles) : (count += 1) {
+        asm volatile ("nop");
+    }
 }

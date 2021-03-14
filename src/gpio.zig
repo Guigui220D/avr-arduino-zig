@@ -171,15 +171,15 @@ pub fn digitalWrite(comptime pin: comptime_int, comptime value: enum { low, high
 pub fn digitalRead(comptime pin: comptime_int) bool {
     switch (pin) {
         0...7 => {
-            var val = PORTD.readInt();
+            var val = PIND.readInt();
             return (val & (1 << (pin - 0))) != 0;
         },
         8...13 => {
-            var val = PORTB.readInt();
+            var val = PINB.readInt();
             return (val & (1 << (pin - 8))) != 0;
         },
         14...19 => {
-            var val = PORTC.readInt();
+            var val = PINC.readInt();
             return (val & (1 << (pin - 14))) != 0;
         },
         else => @compileError("Only port B, C and D are available yet (arduino pins 0 through 19)."),
