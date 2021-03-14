@@ -74,16 +74,6 @@ pub fn begin() void {
 
     CurrentDisp.mode |= Flags.entry_left;
     command(Control.entry_mode_set | CurrentDisp.mode);
-
-    inline for ("Hey guys!") |c| {
-        write(c);
-    }
-
-    command(Control.set_DDRAM_address | 0x40);
-
-    inline for (" - by Guigui220D") |c| {
-        write(c);
-    }
 }
 
 pub fn clear() void {
@@ -99,6 +89,27 @@ fn displayOn() void {
 fn write(value: u8) void {
     gpio.digitalWrite(rs_pin, .high);
     write4bitsTwice(value);
+}
+
+pub fn writeLines(line1: []const u8, line2: []const u8) void {
+    for (line1) |c|
+        write(c);
+    command(Control.set_DDRAM_address | 0x40);
+    for (line2) |c|
+        write(c);
+}
+
+pub fn writePanic(msg: []const u8, error_return_trace: ?*@import("builtin").StackTrace) void {
+    begin();
+
+    for ("Panic! Msg:") |c|
+        write(c);
+    
+    const short = if (msg.len > 16) msg[0..16] else msg;
+    command(Control.set_DDRAM_address | 0x40);
+
+    for (msg) |c|
+        write(c);
 }
 
 fn command(value: u8) void {

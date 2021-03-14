@@ -1,5 +1,16 @@
 const MMIO = @import("mmio.zig").MMIO;
 
+const PINB = MMIO(0x23, u8, packed struct {
+    PINB0: u1 = 0,
+    PINB1: u1 = 0,
+    PINB2: u1 = 0,
+    PINB3: u1 = 0,
+    PINB4: u1 = 0,
+    PINB5: u1 = 0,
+    PINB6: u1 = 0,
+    PINB7: u1 = 0,
+});
+
 const DDRB = MMIO(0x24, u8, packed struct {
     DDB0: u1 = 0,
     DDB1: u1 = 0,
@@ -20,6 +31,17 @@ const PORTB = MMIO(0x25, u8, packed struct {
     PORTB5: u1 = 0,
     PORTB6: u1 = 0,
     PORTB7: u1 = 0,
+});
+
+const PINC = MMIO(0x26, u8, packed struct {
+    PINC0: u1 = 0,
+    PINC1: u1 = 0,
+    PINC2: u1 = 0,
+    PINC3: u1 = 0,
+    PINC4: u1 = 0,
+    PINC5: u1 = 0,
+    PINC6: u1 = 0,
+    PINC7: u1 = 0,
 });
 
 const DDRC = MMIO(0x27, u8, packed struct {
@@ -44,6 +66,17 @@ const PORTC = MMIO(0x28, u8, packed struct {
     PORTC7: u1 = 0,
 });
 
+const PIND = MMIO(0x29, u8, packed struct {
+    PIND0: u1 = 0,
+    PIND1: u1 = 0,
+    PIND2: u1 = 0,
+    PIND3: u1 = 0,
+    PIND4: u1 = 0,
+    PIND5: u1 = 0,
+    PIND6: u1 = 0,
+    PIND7: u1 = 0,
+});
+
 const DDRD = MMIO(0x2A, u8, packed struct {
     DDD0: u1 = 0,
     DDD1: u1 = 0,
@@ -66,39 +99,37 @@ const PORTD = MMIO(0x2B, u8, packed struct {
     PORTD7: u1 = 0,
 });
 
-pub const PinMode = enum { input, output, input_pullup };
-
-pub fn pinMode(comptime pin: comptime_int, comptime mode: PinMode) void {
+pub fn pinMode(comptime pin: comptime_int, comptime mode: enum { input, output, input_pullup }) void {
     if (mode == .input_pullup)
         @compileError("InputPullup mode is not available yet.");
 
     switch (pin) {
         0...7 => {
-            var val = DDRD.read_int();
+            var val = DDRD.readInt();
             if (mode == .output) {
                 val |= 1 << (pin - 0);
             } else {
                 val &= ~@as(u8, 1 << (pin - 0));
             }
-            DDRD.write_int(val);
+            DDRD.writeInt(val);
         },
         8...13 => {
-            var val = DDRB.read_int();
+            var val = DDRB.readInt();
             if (mode == .output) {
                 val |= 1 << (pin - 8);
             } else {
                 val &= ~@as(u8, 1 << (pin - 8));
             }
-            DDRB.write_int(val);
+            DDRB.writeInt(val);
         },
         14...19 => {
-            var val = DDRC.read_int();
+            var val = DDRC.readInt();
             if (mode == .output) {
                 val |= 1 << (pin - 14);
             } else {
                 val &= ~@as(u8, 1 << (pin - 14));
             }
-            DDRC.write_int(val);
+            DDRC.writeInt(val);
         },
         else => @compileError("Only port B, C and D are available yet (arduino pins 0 through 19)."),
     }
@@ -107,38 +138,50 @@ pub fn pinMode(comptime pin: comptime_int, comptime mode: PinMode) void {
 pub fn digitalWrite(comptime pin: comptime_int, comptime value: enum { low, high }) void {
     switch (pin) {
         0...7 => {
-            var val = PORTD.read_int();
+            var val = PORTD.readInt();
             if (value == .high) {
                 val |= 1 << (pin - 0);
             } else {
                 val &= ~@as(u8, 1 << (pin - 0));
             }
-            PORTD.write_int(val);
+            PORTD.writeInt(val);
         },
         8...13 => {
-            var val = PORTB.read_int();
+            var val = PORTB.readInt();
             if (value == .high) {
                 val |= 1 << (pin - 8);
             } else {
                 val &= ~@as(u8, 1 << (pin - 8));
             }
-            PORTB.write_int(val);
+            PORTB.writeInt(val);
         },
         14...19 => {
-            var val = PORTC.read_int();
+            var val = PORTC.readInt();
             if (value == .high) {
                 val |= 1 << (pin - 14);
             } else {
                 val &= ~@as(u8, 1 << (pin - 14));
             }
-            PORTC.write_int(val);
+            PORTC.writeInt(val);
         },
         else => @compileError("Only port B, C and D are available yet (arduino pins 0 through 19)."),
     }
 }
 
-fn toggle(comptime pin: u8) void {
-    var val = PORTB.read_int();
-    val ^= 1 << pin;
-    PORTB.write_int(val);
+pub fn digitalRead(comptime pin: comptime_int) bool {
+    switch (pin) {
+        0...7 => {
+            var val = PORTD.readInt();
+            return (val & (1 << (pin - 0))) != 0;
+        },
+        8...13 => {
+            var val = PORTB.readInt();
+            return (val & (1 << (pin - 8))) != 0;
+        },
+        14...19 => {
+            var val = PORTC.readInt();
+            return (val & (1 << (pin - 14))) != 0;
+        },
+        else => @compileError("Only port B, C and D are available yet (arduino pins 0 through 19)."),
+    }
 }

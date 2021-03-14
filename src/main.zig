@@ -1,27 +1,21 @@
 const uart = @import("uart.zig");
 const gpio = @import("gpio.zig");
 
-const LedKeypad = @import("LedKeypad.zig");
-const LiquidCrystal = @import("LiquidCrystal.zig");
-
-// This is put in the data section
-var ch: u8 = '!';
-
-// This ends up in the bss section
-var bss_stuff: [9]u8 = .{ 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+const led_keypad = @import("led_keypad.zig");
+const liquid_crystal = @import("liquid_crystal.zig");
 
 pub fn main() void {
-    LiquidCrystal.begin();
+    liquid_crystal.begin();
 
-    while (true) {}
+    liquid_crystal.writeLines("hellooo", "test");
+
+    delayMilliseconds(5000);
+
+    @panic("test");
 }
 
 fn delayMilliseconds(comptime ms: comptime_int) void {
-    delayCycles(ms * 16 * 100);
-}
-
-fn delayMicroseconds(comptime us: comptime_int) void {
-    delayCycles((us * 100) / 125);
+    delayCycles(ms * 1600);
 }
 
 fn delayCycles(comptime cycles: comptime_int) void {
