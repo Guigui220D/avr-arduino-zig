@@ -100,9 +100,6 @@ const PORTD = MMIO(0x2B, u8, packed struct {
 });
 
 pub fn pinMode(comptime pin: comptime_int, comptime mode: enum { input, output, input_pullup }) void {
-    if (mode == .input_pullup)
-        @compileError("InputPullup mode is not available yet.");
-
     switch (pin) {
         0...7 => {
             var val = DDRD.readInt();
@@ -132,6 +129,12 @@ pub fn pinMode(comptime pin: comptime_int, comptime mode: enum { input, output, 
             DDRC.writeInt(val);
         },
         else => @compileError("Only port B, C and D are available yet (arduino pins 0 through 19)."),
+    }
+
+    if (mode == .input_pullup) {
+        digitalWrite(pin, .high);
+    } else {
+        digitalWrite(pin, .low);
     }
 }
 
