@@ -12,6 +12,11 @@ pub export fn _start() callconv(.Naked) noreturn {
     copy_data_to_ram();
     clear_bss();
 
+    {
+        const MCUCR = @import("mmio.zig").MMIO(0x55, u8, u8);
+        MCUCR.write(MCUCR.read() & ~@as(u8, 1 << 4));    //disable PUD, for pullup resistors
+    }
+
     main.main();
     while (true) {}
 }
