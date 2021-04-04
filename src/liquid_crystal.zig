@@ -77,6 +77,7 @@ pub fn begin() void {
 }
 
 pub fn clear() void {
+    command(Control.set_DDRAM_address);
     command(Control.clear_display);
     delayMilliseconds(2);
 }
@@ -89,6 +90,19 @@ fn displayOn() void {
 fn write(value: u8) void {
     gpio.digitalWrite(rs_pin, .high);
     write4bitsTwice(value);
+}
+
+pub fn writeU16(value: u16) void {
+    var val = value;
+    var i: u3 = 0;
+    while (i < 4) : (i += 1) {
+        const nibble = @truncate(u8, (val & 0xf000) >> 12);
+        switch (nibble) {
+            0...9 => write('0' + nibble),
+            else => write('a' - 10 + nibble),
+        }
+        val <<= 4;
+    }
 }
 
 pub fn writeLines(line1: []const u8, line2: []const u8) void {
@@ -104,7 +118,7 @@ pub fn writePanic(msg: []const u8) void {
 
     for ("Panic! Msg:") |c|
         write(c);
-    
+
     const short = if (msg.len > 16) msg[0..16] else msg;
     command(Control.set_DDRAM_address | 0x40);
 

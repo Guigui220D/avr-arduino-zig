@@ -1,26 +1,22 @@
 const std = @import("std");
 const uart = @import("uart.zig");
 const gpio = @import("gpio.zig");
+const adc = @import("adc.zig");
 
 const led_keypad = @import("led_keypad.zig");
 const liquid_crystal = @import("liquid_crystal.zig");
 
 pub fn main() void {
-    gpio.pinMode(8, .input_pullup);
-    gpio.pinMode(13, .output);
+    adc.init();
 
-    //liquid_crystal.begin();
-    //liquid_crystal.clear();
+    led_keypad.init();
 
     while (true) {
-        if (gpio.digitalRead(8)) {
-            gpio.digitalWrite(13, .high);
-        } else {
-            gpio.digitalWrite(13, .low);
-        }
+        //const val = adc.analogRead(3);
+        led_keypad.writeU16Hex(0);
     }
 
-    //@panic("billy!");
+    @panic("wat");
 }
 
 fn delayMilliseconds(comptime ms: comptime_int) void {

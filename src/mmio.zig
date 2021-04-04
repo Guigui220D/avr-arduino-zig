@@ -17,5 +17,9 @@ pub fn MMIO(comptime addr: usize, comptime IntT: type, comptime PackedT: type) t
         pub fn writeInt(val: IntT) void {
             ptr().* = val;
         }
+        pub fn bit(val: PackedT) IntT {
+            const intVal = @bitCast(IntT, val);
+            return intVal;
+        }
     };
 }

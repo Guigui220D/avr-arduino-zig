@@ -75,9 +75,8 @@ pub fn writeInt(int: i16) !void {
     while (tube > 0) : (tube -= 1) {
         writeHexDigit(tube, @intCast(u4, @mod(i, 10)));
         i /= 10;
-    } else
-        if (int >= 1000)
-            writeHexDigit(tube, @intCast(u4, i));
+    } else if (int >= 1000)
+        writeHexDigit(tube, @intCast(u4, i));
 }
 
 pub fn writeErr() void {
